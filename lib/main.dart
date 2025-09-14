@@ -1,11 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sport_tournament_manager/screens/screens.dart';
 
 void main() {
   runZonedGuarded(
     () {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+
       runApp(
         ScreenUtilInit(
           designSize: Size(390, 844),
@@ -20,17 +30,50 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+CustomTransitionPage buildPageWithDefaultTransition({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+  bool opaque = true,
+}) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: Duration.zero,
+    opaque: opaque,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _router = GoRouter(
+    routes: [
+      ShellRoute(
+        builder: (context, state, child) => NavigationScreen(child: child),
+        routes: [
+          GoRoute(path: '/', builder: (context, state) => const MainScreen()),
+        ],
+      ),
+    ],
+  );
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Scaffold(),
+      routerConfig: _router,
     );
   }
 }
