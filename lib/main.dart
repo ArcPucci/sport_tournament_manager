@@ -56,7 +56,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _router = GoRouter(
-    initialLocation: '/create',
+    initialLocation: '/tournaments',
     routes: [
       ShellRoute(
         builder: (context, state, child) =>
@@ -69,6 +69,10 @@ class _MyAppState extends State<MyApp> {
               GoRoute(
                 path: 'create',
                 builder: (context, state) => const CreateScreen(),
+              ),
+              GoRoute(
+                path: 'tournaments',
+                builder: (context, state) => const TournamentsScreen(),
               ),
             ],
           ),

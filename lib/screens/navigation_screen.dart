@@ -9,9 +9,11 @@ class NavigationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasNavBar = !path.contains('create');
+    final bottomSafeArea = !path.contains('tournaments');
+    final hasNavBar = !path.contains('create') && !path.contains('tournaments');
     return CustomBg(
       child: SafeArea(
+        bottom: bottomSafeArea,
         child: Column(
           children: [
             Expanded(child: child),

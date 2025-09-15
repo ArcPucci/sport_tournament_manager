@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sport_tournament_manager/utils/utils.dart';
 import 'package:sport_tournament_manager/widgets/widgets.dart';
 
@@ -19,25 +18,7 @@ class _CreateScreenState extends State<CreateScreen> {
     return Column(
       children: [
         SizedBox(height: 12.h),
-        SizedBox(
-          width: 358.w,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: context.pop,
-                child: Image.asset(
-                  'assets/png/back.png',
-                  width: 26.r,
-                  height: 24.r,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              Text("Create a tournament", style: AppTextStyles.ts16_600),
-              SizedBox(width: 26.r),
-            ],
-          ),
-        ),
+        CustomAppBar(title: "Create a tournaments"),
         SizedBox(height: 14.h),
         SizedBox(
           width: 358.w,
@@ -108,14 +89,7 @@ class _CreateScreenState extends State<CreateScreen> {
             runSpacing: 8.h,
             children: List.generate(
               8,
-              (index) => Container(
-                decoration: BoxDecoration(
-                  color: AppColors.grey2,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 19.w, vertical: 8.h),
-                child: Text('$index index', style: AppTextStyles.ts16_400),
-              ),
+              (index) => SelectableCard(text: '$index index'),
             ),
           ),
         ),

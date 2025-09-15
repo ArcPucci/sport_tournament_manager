@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../utils/utils.dart';
 
@@ -48,21 +49,24 @@ class CustomNavBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Container(
-                    width: 79.w,
-                    height: 58.h,
-                    color: Colors.transparent,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.asset(
-                          'assets/png/cup.png',
-                          width: 38.r,
-                          height: 38.r,
-                          fit: BoxFit.fill,
-                        ),
-                        Text("Tournaments", style: AppTextStyles.ts12_500),
-                      ],
+                  GestureDetector(
+                    onTap: () => context.go('/tournaments'),
+                    child: Container(
+                      width: 79.w,
+                      height: 58.h,
+                      color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.asset(
+                            'assets/png/cup.png',
+                            width: 38.r,
+                            height: 38.r,
+                            fit: BoxFit.fill,
+                          ),
+                          Text("Tournaments", style: AppTextStyles.ts12_500),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -71,19 +75,22 @@ class CustomNavBar extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            child: SizedBox(
-              height: 84.h,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/png/plus.png',
-                    width: 61.r,
-                    height: 61.r,
-                    fit: BoxFit.fill,
-                  ),
-                  Text("Create", style: AppTextStyles.ts12_500),
-                ],
+            child: GestureDetector(
+              onTap: () => context.go('/create'),
+              child: SizedBox(
+                height: 84.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'assets/png/plus.png',
+                      width: 61.r,
+                      height: 61.r,
+                      fit: BoxFit.fill,
+                    ),
+                    Text("Create", style: AppTextStyles.ts12_500),
+                  ],
+                ),
               ),
             ),
           ),
