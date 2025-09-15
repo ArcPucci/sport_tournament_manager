@@ -56,11 +56,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _router = GoRouter(
+    initialLocation: '/create',
     routes: [
       ShellRoute(
-        builder: (context, state, child) => NavigationScreen(child: child),
+        builder: (context, state, child) =>
+            NavigationScreen(path: state.fullPath ?? '/', child: child),
         routes: [
-          GoRoute(path: '/', builder: (context, state) => const MainScreen()),
+          GoRoute(
+            path: '/',
+            builder: (context, state) => const MainScreen(),
+            routes: [
+              GoRoute(
+                path: 'create',
+                builder: (context, state) => const CreateScreen(),
+              ),
+            ],
+          ),
         ],
       ),
     ],

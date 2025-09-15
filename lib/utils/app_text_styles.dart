@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sport_tournament_manager/utils/utils.dart';
 
 class AppTextStyles {
   static const _ro = "RussoOne";
@@ -9,6 +10,22 @@ class AppTextStyles {
     fontFamily: _ro,
     fontSize: 35.r,
     fontWeight: FontWeight.w400,
+    color: Colors.white,
+  );
+
+  static final TextStyle ts14_400 = TextStyle(
+    fontSize: 14.r,
+    height: 22 / 14,
+    fontWeight: FontWeight.w400,
+    color: Colors.white,
+    decoration: TextDecoration.underline,
+    decorationColor: Colors.white,
+  );
+
+  static final TextStyle ts14_600 = TextStyle(
+    fontSize: 14.r,
+    height: 22 / 14,
+    fontWeight: FontWeight.w600,
     color: Colors.white,
   );
 
@@ -48,6 +65,13 @@ class AppTextStyles {
     letterSpacing: 0.06,
     fontWeight: FontWeight.w400,
     color: Colors.white,
+  );
+
+  static final TextStyle kp24_700 = TextStyle(
+    fontFamily: _kp,
+    fontSize: 24.r,
+    fontWeight: FontWeight.w700,
+    color: AppColors.red,
   );
 
   static final TextStyle kp20_700 = TextStyle(

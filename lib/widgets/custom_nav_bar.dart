@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/utils.dart';
 
 class CustomNavBar extends StatelessWidget {
-  const CustomNavBar({super.key});
+  const CustomNavBar({super.key, required this.path});
+
+  final String path;
 
   @override
   Widget build(BuildContext context) {

@@ -4,3 +4,6 @@ export 'custom_page_indicator.dart';
 export 'buttons/buttons.dart';
 export 'text_fields/text_fields.dart';
 export 'cards/cards.dart';
+export 'dialogs/dialogs.dart';
+export 'sheets/sheets.dart';
+export 'menu/menu.dart';
