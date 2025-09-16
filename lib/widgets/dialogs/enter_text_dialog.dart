@@ -5,10 +5,12 @@ import '../../utils/utils.dart';
 import '../widgets.dart';
 
 class EnterTextDialog extends StatelessWidget {
-  const EnterTextDialog({super.key, required this.text, required this.onSave});
+  EnterTextDialog({super.key, required this.text, required this.onSave});
 
   final String text;
   final void Function(String) onSave;
+
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class EnterTextDialog extends StatelessWidget {
                     style: AppTextStyles.ts16_600,
                     textAlign: TextAlign.center,
                   ),
-                  CustomInput2(),
+                  CustomInput2(controller: controller),
                   Column(
                     children: [
                       SizedBox(height: 8.h),
@@ -44,7 +46,7 @@ class EnterTextDialog extends StatelessWidget {
                         width: 334.w,
                         height: 40.h,
                         onTap: () {
-                          onSave.call("");
+                          onSave.call(controller.text);
                           Navigator.of(context).pop();
                         },
                       ),

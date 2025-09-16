@@ -3,8 +3,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sport_tournament_manager/utils/utils.dart';
 import 'package:sport_tournament_manager/widgets/widgets.dart';
 
-class LogoSheet extends StatelessWidget {
-  const LogoSheet({super.key});
+class LogoSheet extends StatefulWidget {
+  const LogoSheet({super.key, required this.logo, required this.onSelected});
+
+  final String logo;
+  final void Function(String) onSelected;
+
+  @override
+  State<LogoSheet> createState() => _LogoSheetState();
+}
+
+class _LogoSheetState extends State<LogoSheet> {
+  String _logo = 'assets/png/logo3.png';
+
+  @override
+  void initState() {
+    super.initState();
+    _logo = widget.logo;
+  }
+
+  final logos = [
+    "assets/png/logo1.png",
+    "assets/png/logo2.png",
+    "assets/png/logo3.png",
+    "assets/png/logo4.png",
+    "assets/png/logo5.png",
+    "assets/png/logo6.png",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +61,8 @@ class LogoSheet extends StatelessWidget {
                       width: 358.w,
                       height: 235.h,
                       child: GridView.builder(
+                        itemCount: logos.length,
+                        shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -43,21 +70,37 @@ class LogoSheet extends StatelessWidget {
                           mainAxisSpacing: 21.h,
                         ),
                         itemBuilder: (context, index) {
-                          return Container(
-                            width: 107.r,
-                            height: 107.r,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: AssetImage('assets/png/helm.png'),
-                                fit: BoxFit.fill,
+                          final selected = logos[index] == _logo;
+                          return GestureDetector(
+                            onTap: () => setState(() => _logo = logos[index]),
+                            child: Container(
+                              width: 107.r,
+                              height: 107.r,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: selected
+                                    ? Border.all(
+                                        width: 2.sp,
+                                        color: AppColors.red,
+                                      )
+                                    : null,
+                                image: DecorationImage(
+                                  image: AssetImage(logos[index]),
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           );
                         },
                       ),
                     ),
-                    CustomButton1(text: "Save"),
+                    CustomButton1(
+                      text: "Save",
+                      onTap: () {
+                        if (_logo != widget.logo) widget.onSelected.call(_logo);
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ],
                 ),
               ),

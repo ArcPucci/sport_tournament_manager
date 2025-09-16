@@ -4,8 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../utils/utils.dart';
 
 class CustomSearchBox extends StatelessWidget {
-  CustomSearchBox({super.key});
+  CustomSearchBox({super.key, required this.controller});
 
+  final TextEditingController controller;
   final focusNode = FocusNode();
 
   @override
@@ -24,6 +25,7 @@ class CustomSearchBox extends StatelessWidget {
           children: [
             Expanded(
               child: TextField(
+                controller: controller,
                 focusNode: focusNode,
                 style: AppTextStyles.ts16_400,
                 decoration: InputDecoration.collapsed(

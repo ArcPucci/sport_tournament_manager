@@ -4,12 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_tournament_manager/providers/providers.dart';
 import 'package:sport_tournament_manager/screens/screens.dart';
+import 'package:sport_tournament_manager/services/services.dart';
 
 void main() {
   runZonedGuarded(
-    () {
+    () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      final sqlService = SqlService();
+      await sqlService.init();
 
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -19,7 +25,7 @@ void main() {
       runApp(
         ScreenUtilInit(
           designSize: Size(390, 844),
-          builder: (context, child) => const MyApp(),
+          builder: (context, child) => MyApp(sqlService: sqlService),
         ),
       );
     },
@@ -48,7 +54,9 @@ CustomTransitionPage buildPageWithDefaultTransition({
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.sqlService});
+
+  final SqlService sqlService;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -56,7 +64,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _router = GoRouter(
-    initialLocation: '/tournaments',
+    initialLocation: '/',
     routes: [
       ShellRoute(
         builder: (context, state, child) =>
@@ -68,11 +76,27 @@ class _MyAppState extends State<MyApp> {
             routes: [
               GoRoute(
                 path: 'create',
-                builder: (context, state) => const CreateScreen(),
+                pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: const CreateScreen(),
+                ),
+              ),
+              GoRoute(
+                path: 'edit',
+                pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: const CreateScreen(isEdit: true),
+                ),
               ),
               GoRoute(
                 path: 'tournaments',
-                builder: (context, state) => const TournamentsScreen(),
+                pageBuilder: (context, state) => buildPageWithDefaultTransition(
+                  context: context,
+                  state: state,
+                  child: const TournamentsScreen(),
+                ),
               ),
             ],
           ),
@@ -83,12 +107,24 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return MultiProvider(
+      providers: [
+        Provider(
+          create: (context) => TournamentsService(widget.sqlService.database),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TournamentsProvider(
+            tournamentsService: Provider.of(context, listen: false),
+          ),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        routerConfig: _router,
       ),
-      routerConfig: _router,
     );
   }
 }

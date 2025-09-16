@@ -36,6 +36,13 @@ class AppTextStyles {
     color: Colors.white,
   );
 
+  static final TextStyle ts16_500 = TextStyle(
+    fontSize: 16.r,
+    height: 22 / 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.lightGrey,
+  );
+
   static final TextStyle ts17_500 = TextStyle(
     fontSize: 17.r,
     height: 22 / 17,

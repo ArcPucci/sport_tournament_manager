@@ -5,8 +5,16 @@ import 'package:sport_tournament_manager/widgets/menu/custom_popup_menu.dart';
 import '../../utils/utils.dart';
 
 class ListTileItem extends StatelessWidget {
-  const ListTileItem({super.key, this.onEdit, this.onDelete});
+  const ListTileItem({
+    super.key,
+    this.onEdit,
+    this.onDelete,
+    required this.name,
+    required this.icon,
+  });
 
+  final String name;
+  final String icon;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -22,14 +30,9 @@ class ListTileItem extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 8.w),
       child: Row(
         children: [
-          Image.asset(
-            'assets/png/player_logo_1.png',
-            width: 37.r,
-            height: 37.r,
-            fit: BoxFit.fill,
-          ),
+          Image.asset(icon, width: 37.r, height: 37.r, fit: BoxFit.fill),
           SizedBox(width: 8.w),
-          Expanded(child: Text("Player 1", style: AppTextStyles.ts12_500)),
+          Expanded(child: Text(name, style: AppTextStyles.ts12_500)),
           CustomPopupMenu(onEdit: onEdit, onDelete: onDelete),
         ],
       ),

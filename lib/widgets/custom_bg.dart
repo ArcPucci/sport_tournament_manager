@@ -16,9 +16,9 @@ class CustomBg extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.dark,
       ),
-      child: Material(
-        color: AppColors.black,
-        child: Stack(
+      child: Scaffold(
+        backgroundColor: AppColors.black,
+        body: Stack(
           alignment: Alignment.center,
           children: [
             if (bg != null)
