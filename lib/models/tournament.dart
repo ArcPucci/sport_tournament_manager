@@ -2,8 +2,8 @@ import 'dart:convert';
 
 class Tournament {
   final int id;
-  final String name;
-  final String logo;
+  String name;
+  String logo;
   final DateTime created;
   final List<String> players;
   final List<String> teams;

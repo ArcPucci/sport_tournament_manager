@@ -44,6 +44,19 @@ class SqlService {
         formats $textType
       )
     ''');
+    await db.execute('''
+      CREATE TABLE $matchesTable (
+        id $idType,
+        tournament_id $intType,
+        format $textType,
+        first_team $textType,
+        second_team $textType,
+        created $intType,
+        location $textType,
+        team1_stats $textType,
+        team2_stats $textType
+      )
+    ''');
   }
 
   Future<void> close() async {

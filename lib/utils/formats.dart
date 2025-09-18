@@ -8,3 +8,14 @@ final List<String> tournamentFormats = [
   "Series",
   "Leagues",
 ];
+
+Map<String, int> formatMap = {
+  "Playoffs": 2,
+  "Group Stage": 3,
+  "Individual": 1,
+  "Qualifying tournaments": 2,
+  "Round robin": 2,
+  "Knockout games": 2,
+  "Series": 3,
+  "Leagues": 4,
+};

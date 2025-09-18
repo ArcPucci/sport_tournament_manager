@@ -60,20 +60,32 @@ class _MainScreenState extends State<MainScreen> {
                 children: [
                   Positioned(
                     left: 0,
-                    child: Image.asset(
-                      'assets/png/profile.png',
-                      width: 24.r,
-                      height: 24.r,
-                      fit: BoxFit.fill,
+                    child: GestureDetector(
+                      onTap: () => context.go('/profile'),
+                      child: Image.asset(
+                        'assets/png/profile.png',
+                        width: 24.r,
+                        height: 24.r,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                   Positioned(
                     right: 0,
-                    child: Image.asset(
-                      'assets/png/notification.png',
-                      width: 25.r,
-                      height: 25.r,
-                      fit: BoxFit.fill,
+                    child: Consumer<ConfigProvider>(
+                      builder: (context, value, Widget? child) {
+                        return GestureDetector(
+                          onTap: value.toggleNoty,
+                          child: Image.asset(
+                            value.noty
+                                ? 'assets/png/notification.png'
+                                : 'assets/png/bell2.png',
+                            width: 25.r,
+                            height: 25.r,
+                            fit: BoxFit.fill,
+                          ),
+                        );
+                      },
                     ),
                   ),
                   Text("Welcome to the game!", style: AppTextStyles.ts16_600),
@@ -116,6 +128,10 @@ class _MainScreenState extends State<MainScreen> {
                   return Center(
                     child: TournamentCard(
                       tournament: tournaments[index],
+                      onSelect: () {
+                        value.setTournament(tournaments[index]);
+                        context.go('/tournament');
+                      },
                       onEdit: () {
                         value.setTournament(tournaments[index]);
                         context.go('/edit');
@@ -146,6 +162,8 @@ class _MainScreenState extends State<MainScreen> {
           .where((e) => e.name.toLowerCase().contains(query))
           .toList();
     }
+
+    return tournaments;
 
     final currentDate = DateTime.now();
     if (_upcoming) {

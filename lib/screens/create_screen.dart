@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_tournament_manager/models/tournament.dart';
 import 'package:sport_tournament_manager/providers/providers.dart';
@@ -29,6 +30,7 @@ class _CreateScreenState extends State<CreateScreen> {
       _logo = tournament.logo;
       _formats = tournament.formats;
       _players = tournament.players;
+      _locations = tournament.locations;
       _teams = tournament.teams;
     }
   }
@@ -89,7 +91,6 @@ class _CreateScreenState extends State<CreateScreen> {
             }),
           ),
         ),
-        SizedBox(height: 16.h),
         Expanded(child: _buildPage()),
         if (hasSave)
           CustomButton1(text: _page == 3 ? 'Save' : 'Next', onTap: _next),
@@ -100,6 +101,7 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget _buildStep1() {
     return Column(
       children: [
+        SizedBox(height: 16.h),
         Image.asset(_logo, width: 107.r, height: 107.r, fit: BoxFit.fill),
         SizedBox(height: 8.h),
         GestureDetector(
@@ -136,145 +138,156 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget _buildStep2() {
     if (_teams.isEmpty) return SizedBox();
 
-    return Column(
-      children: [
-        ListView.separated(
-          itemCount: _teams.length,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) {
-            return Center(
-              child: ListTileItem(
-                name: _teams[index],
-                icon: 'assets/png/team_logo.png',
-                onEdit: () => showInputDialog(
-                  title: 'Enter the team name',
-                  onSave: (value) => _editTeamName(index, value),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: Column(
+        children: [
+          ListView.separated(
+            itemCount: _teams.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (context, index) => SizedBox(height: 12.h),
+            itemBuilder: (context, index) {
+              return Center(
+                child: ListTileItem(
+                  name: _teams[index],
+                  icon: 'assets/png/team_logo.png',
+                  onEdit: () => showInputDialog(
+                    title: 'Enter the team name',
+                    onSave: (value) => _editTeamName(index, value),
+                  ),
+                  onDelete: () => showConfirmationDialog(
+                    title: 'Are you sure you want\nto delete the command?',
+                    onDelete: () => _deleteTeam(index),
+                  ),
                 ),
-                onDelete: () => showConfirmationDialog(
-                  title: 'Are you sure you want\nto delete the command?',
-                  onDelete: () => _deleteTeam(index),
-                ),
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 16.h),
-        SizedBox(
-          width: 358.w,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: _addTeam,
-              child: Text(
-                "Add team",
-                style: AppTextStyles.ts16_600.copyWith(
-                  color: AppColors.red,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.red,
+              );
+            },
+          ),
+          SizedBox(height: 16.h),
+          SizedBox(
+            width: 358.w,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: _addTeam,
+                child: Text(
+                  "Add team",
+                  style: AppTextStyles.ts16_600.copyWith(
+                    color: AppColors.red,
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.red,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildStep3() {
     if (_players.isEmpty) return SizedBox();
 
-    return Column(
-      children: [
-        ListView.separated(
-          itemCount: _players.length,
-          shrinkWrap: true,
-          separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) {
-            return Center(
-              child: ListTileItem(
-                name: _players[index],
-                icon: 'assets/png/player_logo.png',
-                onEdit: () => showInputDialog(
-                  title: 'Enter the player name',
-                  onSave: (value) => _editPlayerName(index, value),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: Column(
+        children: [
+          ListView.separated(
+            itemCount: _players.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (context, index) => SizedBox(height: 12.h),
+            itemBuilder: (context, index) {
+              return Center(
+                child: ListTileItem(
+                  name: _players[index],
+                  icon: 'assets/png/player_logo.png',
+                  onEdit: () => showInputDialog(
+                    title: 'Enter the player name',
+                    onSave: (value) => _editPlayerName(index, value),
+                  ),
+                  onDelete: () => showConfirmationDialog(
+                    title: 'Are you sure you want\nto delete the player?',
+                    onDelete: () => _deletePlayer(index),
+                  ),
                 ),
-                onDelete: () => showConfirmationDialog(
-                  title: 'Are you sure you want\nto delete the player?',
-                  onDelete: () => _deletePlayer(index),
-                ),
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 16.h),
-        SizedBox(
-          width: 358.w,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: _addPlayer,
-              child: Text(
-                "Add player",
-                style: AppTextStyles.ts16_600.copyWith(
-                  color: AppColors.red,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.red,
+              );
+            },
+          ),
+          SizedBox(height: 16.h),
+          SizedBox(
+            width: 358.w,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: _addPlayer,
+                child: Text(
+                  "Add player",
+                  style: AppTextStyles.ts16_600.copyWith(
+                    color: AppColors.red,
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.red,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildStep4() {
     if (_locations.isEmpty) return SizedBox();
 
-    return Column(
-      children: [
-        ListView.separated(
-          itemCount: 2,
-          shrinkWrap: true,
-          separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) {
-            return Center(
-              child: ListTileItem(
-                name: _locations[index],
-                icon: 'assets/png/location_logo.png',
-                onEdit: () => showInputDialog(
-                  title: 'Enter the location name',
-                  onSave: (value) => _editLocationName(index, value),
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: Column(
+        children: [
+          ListView.separated(
+            itemCount: _locations.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (context, index) => SizedBox(height: 12.h),
+            itemBuilder: (context, index) {
+              return Center(
+                child: ListTileItem(
+                  name: _locations[index],
+                  icon: 'assets/png/location_logo.png',
+                  onEdit: () => showInputDialog(
+                    title: 'Enter the location name',
+                    onSave: (value) => _editLocationName(index, value),
+                  ),
+                  onDelete: () => showConfirmationDialog(
+                    title: 'Are you sure you want\nto delete the location?',
+                    onDelete: () => _deleteLocation(index),
+                  ),
                 ),
-                onDelete: () => showConfirmationDialog(
-                  title: 'Are you sure you want\nto delete the location?',
-                  onDelete: () => _deleteLocation(index),
-                ),
-              ),
-            );
-          },
-        ),
-        SizedBox(height: 16.h),
-        SizedBox(
-          width: 358.w,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: _addLocation,
-              child: Text(
-                "Add location",
-                style: AppTextStyles.ts16_600.copyWith(
-                  color: AppColors.red,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.red,
+              );
+            },
+          ),
+          SizedBox(height: 16.h),
+          SizedBox(
+            width: 358.w,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: _addLocation,
+                child: Text(
+                  "Add location",
+                  style: AppTextStyles.ts16_600.copyWith(
+                    color: AppColors.red,
+                    decoration: TextDecoration.underline,
+                    decorationColor: AppColors.red,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -293,6 +306,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
         if (_teams.isEmpty) {
           showNumberPickerDialog(
+            min: 2,
             title: 'Enter the number of teams',
             onSave: (value) {
               for (var i = 0; i < value; i++) {
@@ -345,10 +359,12 @@ class _CreateScreenState extends State<CreateScreen> {
 
         if (widget.isEdit) {
           _tournamentsProvider.updateTournament(tournament);
+          context.pop(tournament);
         } else {
           _tournamentsProvider.createTournament(tournament);
+          context.pop();
         }
-        break;
+        return;
     }
 
     _page++;
@@ -396,6 +412,7 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 
   void showNumberPickerDialog({
+    int min = 1,
     required String title,
     required void Function(int) onSave,
   }) {
@@ -404,7 +421,11 @@ class _CreateScreenState extends State<CreateScreen> {
       barrierDismissible: false,
       builder: (context) {
         return Center(
-          child: CustomNumberPickerDialog(title: title, onSave: onSave),
+          child: CustomNumberPickerDialog(
+            title: title,
+            min: min,
+            onSave: onSave,
+          ),
         );
       },
     );
@@ -445,13 +466,19 @@ class _CreateScreenState extends State<CreateScreen> {
       showMessage('Team name must be not empty');
       return;
     }
+
+    if (_teams.contains(value)) {
+      showMessage('Team name already exists');
+      return;
+    }
+
     _teams[index] = value;
     setState(() {});
   }
 
   void _deleteTeam(int index) {
-    if (_teams.length == 1) {
-      showMessage('You must have at least one team');
+    if (_teams.length == 2) {
+      showMessage('You must have at least two teams');
       return;
     }
     _teams.removeAt(index);

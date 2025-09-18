@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_tournament_manager/services/services.dart';
 import 'package:sport_tournament_manager/utils/utils.dart';
 import 'package:sport_tournament_manager/widgets/widgets.dart';
 
@@ -35,11 +38,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             top: 24.h,
             right: 24.w,
             child: SafeArea(
-              child: Image.asset(
-                'assets/png/close.png',
-                width: 34.r,
-                height: 34.r,
-                fit: BoxFit.fill,
+              child: GestureDetector(
+                onTap: () {
+                  context.read<PreferencesProvider>().setFirstInit();
+                  context.go('/');
+                },
+                child: Image.asset(
+                  'assets/png/close.png',
+                  width: 34.r,
+                  height: 34.r,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),
@@ -65,22 +74,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       left: 0,
                       child: GestureDetector(
                         onTap: _prev,
-                        child: Container(
-                          width: 68.h,
-                          height: 68.h,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          alignment: Alignment.center,
-                          child: Transform.rotate(
-                            angle: pi,
-                            child: Image.asset(
-                              'assets/png/arrow_right.png',
-                              width: 37.r,
-                              height: 37.r,
-                              color: AppColors.red,
-                              fit: BoxFit.fill,
+                        child: Opacity(
+                          opacity: _selectedIndex == 0 ? 0.5 : 1,
+                          child: Container(
+                            width: 68.h,
+                            height: 68.h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                            alignment: Alignment.center,
+                            child: Transform.rotate(
+                              angle: pi,
+                              child: Image.asset(
+                                'assets/png/arrow_right.png',
+                                width: 37.r,
+                                height: 37.r,
+                                color: AppColors.red,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                         ),
@@ -234,6 +246,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+    } else {
+      context.read<PreferencesProvider>().setFirstInit();
+      context.go('/');
     }
   }
 }

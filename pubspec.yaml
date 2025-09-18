@@ -41,6 +41,10 @@ dependencies:
   provider: ^6.1.5+1
   intl: ^0.20.2
   carousel_slider: ^5.1.1
+  table_calendar: ^3.2.0
+  image_picker: ^1.2.0
+  shared_preferences: ^2.5.3
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:
@@ -100,6 +104,9 @@ flutter:
     - family: Kantumruy
       fonts:
         - asset: assets/fonts/KantumruyPro-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/KantumruyPro-Regular.ttf
+          weight: 400
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

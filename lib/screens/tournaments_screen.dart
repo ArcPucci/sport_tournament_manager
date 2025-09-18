@@ -84,6 +84,11 @@ class _TournamentsScreenState extends State<TournamentsScreen> {
                 return Center(
                   child: TournamentCard(
                     tournament: tournaments[index],
+                    onSelect: () {
+                      value.setTournament(tournaments[index]);
+                      context.push('/tournament');
+                    },
+
                     onEdit: () {
                       value.setTournament(tournaments[index]);
                       context.push('/edit');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/utils.dart';
@@ -26,6 +27,9 @@ class CustomInput1 extends StatelessWidget {
           focusNode: focusNode,
           controller: controller,
           style: AppTextStyles.ts16_400,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(16),
+          ],
           decoration: InputDecoration.collapsed(
             hintText: 'Tournament name',
             hintStyle: AppTextStyles.ts16_400.copyWith(color: AppColors.grey3),

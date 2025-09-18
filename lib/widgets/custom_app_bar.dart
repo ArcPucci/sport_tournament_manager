@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../utils/utils.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key, required this.title});
+  const CustomAppBar({super.key, required this.title, this.onBack});
 
   final String title;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CustomAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: context.pop,
+            onTap: onBack ?? context.pop,
             child: Image.asset(
               'assets/png/back.png',
               width: 26.r,

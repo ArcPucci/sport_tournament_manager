@@ -3,8 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sport_tournament_manager/utils/utils.dart';
 
 class CustomPopupMenu extends StatefulWidget {
-  const CustomPopupMenu({super.key, this.onEdit, this.onDelete});
+  const CustomPopupMenu({
+    super.key,
+    this.canDelete = true,
+    this.onEdit,
+    this.onDelete,
+  });
 
+  final bool canDelete;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
@@ -55,16 +61,20 @@ class _CustomPopupMenuState extends State<CustomPopupMenu> {
             child: Center(child: Text("Edit", style: AppTextStyles.ts12_500)),
           ),
         ),
-        PopupMenuDivider(height: 1.sp, color: AppColors.lightGrey),
-        PopupMenuItem(
-          value: 'delete',
-          padding: EdgeInsets.zero,
-          child: SizedBox(
-            width: 182.w,
-            height: 37.h,
-            child: Center(child: Text("Delete", style: AppTextStyles.ts12_500)),
+        if (widget.canDelete) ...[
+          PopupMenuDivider(height: 1.sp, color: AppColors.lightGrey),
+          PopupMenuItem(
+            value: 'delete',
+            padding: EdgeInsets.zero,
+            child: SizedBox(
+              width: 182.w,
+              height: 37.h,
+              child: Center(
+                child: Text("Delete", style: AppTextStyles.ts12_500),
+              ),
+            ),
           ),
-        ),
+        ],
       ],
     );
   }

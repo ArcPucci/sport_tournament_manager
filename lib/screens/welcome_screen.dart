@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sport_tournament_manager/utils/utils.dart';
 import 'package:sport_tournament_manager/widgets/widgets.dart';
 
@@ -11,16 +12,20 @@ class WelcomeScreen extends StatelessWidget {
     return CustomBg(
       bg: 'assets/png/onboarding1.png',
       child: Stack(
+        alignment: Alignment.center,
         children: [
           Positioned(
             top: 24.h,
             right: 24.w,
             child: SafeArea(
-              child: Image.asset(
-                'assets/png/close.png',
-                width: 34.r,
-                height: 34.r,
-                fit: BoxFit.fill,
+              child: GestureDetector(
+                onTap: () => context.go("/"),
+                child: Image.asset(
+                  'assets/png/close.png',
+                  width: 34.r,
+                  height: 34.r,
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
           ),
@@ -46,7 +51,12 @@ class WelcomeScreen extends StatelessWidget {
           ),
           Positioned(
             bottom: 24.h,
-            child: SafeArea(child: CustomButton1(text: "Let's get started!")),
+            child: SafeArea(
+              child: CustomButton1(
+                text: "Let's get started!",
+                onTap: () => context.go('/onboarding'),
+              ),
+            ),
           ),
         ],
       ),

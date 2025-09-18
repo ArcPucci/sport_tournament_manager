@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sport_tournament_manager/widgets/widgets.dart';
 
 import '../../utils/utils.dart';
-import '../widgets.dart';
 
 class CustomNumberPickerDialog extends StatefulWidget {
   const CustomNumberPickerDialog({
     super.key,
+    this.min = 1,
+    this.max = 10,
     required this.onSave,
     required this.title,
   });
 
+  final int min;
+  final int max;
   final String title;
   final void Function(int) onSave;
 
@@ -20,10 +24,17 @@ class CustomNumberPickerDialog extends StatefulWidget {
 }
 
 class _CustomNumberPickerDialogState extends State<CustomNumberPickerDialog> {
-  final FixedExtentScrollController _controller = FixedExtentScrollController(
-    initialItem: 1,
-  );
-  int _selected = 2;
+  late FixedExtentScrollController _controller;
+  late int _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.min;
+    _controller = FixedExtentScrollController(
+      initialItem: 0,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +67,23 @@ class _CustomNumberPickerDialogState extends State<CustomNumberPickerDialog> {
                     itemExtent: 43,
                     perspective: 0.005,
                     physics: const FixedExtentScrollPhysics(),
-                    onSelectedItemChanged: (index) =>
-                        setState(() => _selected = index + 1),
+                    onSelectedItemChanged: (index) {
+                      setState(() {
+                        _selected = widget.min + index;
+                      });
+                    },
                     childDelegate: ListWheelChildBuilderDelegate(
-                      childCount: 20,
+                      childCount: widget.max - widget.min + 1,
                       builder: (context, index) {
-                        final number = index + 1;
+                        final number = widget.min + index;
                         return Center(
                           child: Text(
                             number.toString(),
                             style: number == _selected
                                 ? AppTextStyles.kp24_700
                                 : AppTextStyles.ts16_600.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                  ),
+                              color: Colors.white.withValues(alpha: 0.7),
+                            ),
                           ),
                         );
                       },

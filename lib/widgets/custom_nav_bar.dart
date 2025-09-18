@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_tournament_manager/providers/providers.dart';
 
 import '../utils/utils.dart';
+import 'sheets/premium_sheet.dart';
 
 class CustomNavBar extends StatelessWidget {
   const CustomNavBar({super.key, required this.path});
@@ -76,7 +80,20 @@ class CustomNavBar extends StatelessWidget {
           Positioned(
             top: 0,
             child: GestureDetector(
-              onTap: () => context.go('/create'),
+              onTap: () {
+                final tournaments = context
+                    .read<TournamentsProvider>()
+                    .tournaments
+                    .length;
+                final premium = context.read<ConfigProvider>().premium;
+
+                if (!premium && tournaments == 5) {
+                  showPremiumSheet(context);
+                  return;
+                }
+
+                context.go('/create');
+              },
               child: SizedBox(
                 height: 84.h,
                 child: Column(
@@ -96,6 +113,15 @@ class CustomNavBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void showPremiumSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return const PremiumSheet();
+      },
     );
   }
 }

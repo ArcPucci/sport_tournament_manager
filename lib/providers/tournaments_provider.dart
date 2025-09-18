@@ -19,8 +19,11 @@ class TournamentsProvider extends ChangeNotifier {
 
   List<Tournament> get tournaments => _tournaments;
 
+  bool _backToTournament = false;
+
   void init() async {
     _tournaments = await _tournamentsService.getTournaments();
+    notifyListeners();
   }
 
   void createTournament(Tournament tournament) async {
@@ -43,5 +46,14 @@ class TournamentsProvider extends ChangeNotifier {
     await _tournamentsService.deleteTournament(tournament);
     _tournaments = await _tournamentsService.getTournaments();
     notifyListeners();
+  }
+
+  void editTournament(Tournament tournament) {
+    _tournament = tournament;
+    _backToTournament = true;
+  }
+
+  void backToTournament() {
+    _backToTournament = false;
   }
 }

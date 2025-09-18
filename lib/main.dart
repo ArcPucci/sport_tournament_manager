@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sport_tournament_manager/providers/providers.dart';
 import 'package:sport_tournament_manager/screens/screens.dart';
 import 'package:sport_tournament_manager/services/services.dart';
@@ -17,6 +18,9 @@ void main() {
       final sqlService = SqlService();
       await sqlService.init();
 
+      final preferences = await SharedPreferences.getInstance();
+      final preferencesProvider = PreferencesProvider(preferences);
+
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -25,7 +29,10 @@ void main() {
       runApp(
         ScreenUtilInit(
           designSize: Size(390, 844),
-          builder: (context, child) => MyApp(sqlService: sqlService),
+          builder: (context, child) => MyApp(
+            sqlService: sqlService,
+            preferencesProvider: preferencesProvider,
+          ),
         ),
       );
     },
@@ -54,68 +61,117 @@ CustomTransitionPage buildPageWithDefaultTransition({
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, required this.sqlService});
+  const MyApp({
+    super.key,
+    required this.sqlService,
+    required this.preferencesProvider,
+  });
 
   final SqlService sqlService;
+  final PreferencesProvider preferencesProvider;
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final _router = GoRouter(
-    initialLocation: '/',
-    routes: [
-      ShellRoute(
-        builder: (context, state, child) =>
-            NavigationScreen(path: state.fullPath ?? '/', child: child),
-        routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const MainScreen(),
-            routes: [
-              GoRoute(
-                path: 'create',
-                pageBuilder: (context, state) => buildPageWithDefaultTransition(
-                  context: context,
-                  state: state,
-                  child: const CreateScreen(),
+  late final GoRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = GoRouter(
+      initialLocation: widget.preferencesProvider.getFirstInit()
+          ? '/welcome'
+          : '/',
+      routes: [
+        GoRoute(
+          path: '/welcome',
+          builder: (context, state) => WelcomeScreen(),
+        ),
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => OnboardingScreen(),
+        ),
+        ShellRoute(
+          builder: (context, state, child) =>
+              NavigationScreen(path: state.fullPath ?? '/', child: child),
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const MainScreen(),
+              routes: [
+                GoRoute(
+                  path: 'create',
+                  pageBuilder: (context, state) =>
+                      buildPageWithDefaultTransition(
+                        context: context,
+                        state: state,
+                        child: const CreateScreen(),
+                      ),
                 ),
-              ),
-              GoRoute(
-                path: 'edit',
-                pageBuilder: (context, state) => buildPageWithDefaultTransition(
-                  context: context,
-                  state: state,
-                  child: const CreateScreen(isEdit: true),
+                GoRoute(
+                  path: 'edit',
+                  pageBuilder: (context, state) =>
+                      buildPageWithDefaultTransition(
+                        context: context,
+                        state: state,
+                        child: const CreateScreen(isEdit: true),
+                      ),
                 ),
-              ),
-              GoRoute(
-                path: 'tournaments',
-                pageBuilder: (context, state) => buildPageWithDefaultTransition(
-                  context: context,
-                  state: state,
-                  child: const TournamentsScreen(),
+                GoRoute(
+                  path: 'tournaments',
+                  pageBuilder: (context, state) =>
+                      buildPageWithDefaultTransition(
+                        context: context,
+                        state: state,
+                        child: const TournamentsScreen(),
+                      ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ],
-  );
+                GoRoute(
+                  path: 'tournament',
+                  pageBuilder: (context, state) =>
+                      buildPageWithDefaultTransition(
+                        context: context,
+                        state: state,
+                        child: const TournamentScreen(),
+                      ),
+                ),
+                GoRoute(
+                  path: 'profile',
+                  pageBuilder: (context, state) =>
+                      buildPageWithDefaultTransition(
+                        context: context,
+                        state: state,
+                        child: const MyAccountScreen(),
+                      ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider.value(value: widget.preferencesProvider),
         Provider(
           create: (context) => TournamentsService(widget.sqlService.database),
+        ),
+        Provider(
+          create: (context) => MatchesService(widget.sqlService.database),
         ),
         ChangeNotifierProvider(
           create: (context) => TournamentsProvider(
             tournamentsService: Provider.of(context, listen: false),
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ConfigProvider(widget.preferencesProvider),
         ),
       ],
       child: MaterialApp.router(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/utils.dart';
@@ -24,6 +25,7 @@ class CustomInput2 extends StatelessWidget {
         alignment: Alignment.center,
         child: TextField(
           controller: controller,
+          inputFormatters: [LengthLimitingTextInputFormatter(16)],
           style: AppTextStyles.ts16_400,
           decoration: InputDecoration.collapsed(hintText: ''),
         ),
